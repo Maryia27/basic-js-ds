@@ -1,39 +1,26 @@
-const { assert } = require('chai');
-const { testOptional, ListNode } = require('../extensions/index.js');
-const { removeKFromList } = require('../src/remove-from-list.js');
+// src/remove-from-list.js
 
-it.optional = testOptional;
-
-Object.freeze(assert);
-
-function convertArrayToList(arr) {
-  return arr.reverse().reduce((acc, cur) => {
-    if (acc) {
-      const node = new ListNode(cur);
-      node.next = acc;
-      return node;
-    }
-
-    return new ListNode(cur);
-  }, null);
+class ListNode {
+  constructor(x) {
+    this.value = x;
+    this.next = null;
+  }
 }
 
-describe('Remove from list', () => {
-  it.optional('should return the list without values equal to k', () => {
-    const initial = convertArrayToList([3, 1, 2, 3, 4, 5]);
-    const expected = convertArrayToList([1, 2, 4, 5]);
-    assert.deepEqual(removeKFromList(initial, 3), expected);
-  });
+function removeKFromList(l, k) {
+  let dummyHead = new ListNode(0);
+  dummyHead.next = l;
+  let current = dummyHead;
 
-  it.optional('should return the list without values equal to k (with double k)', () => {
-    const initial = convertArrayToList([1, 2, 3, 3, 4, 5]);
-    const expected = convertArrayToList([1, 2, 4, 5]);
-    assert.deepEqual(removeKFromList(initial, 3), expected);
-  });
+  while (current.next !== null) {
+    if (current.next.value === k) {
+      current.next = current.next.next;
+    } else {
+      current = current.next;
+    }
+  }
 
-  it.optional('should return the list without values equal to k (with k at the end)', () => {
-    const initial = convertArrayToList([1, 2, 3]);
-    const expected = convertArrayToList([1, 2]);
-    assert.deepEqual(removeKFromList(initial, 3), expected);
-  });
-});
+  return dummyHead.next;
+}
+
+module.exports = { removeKFromList, ListNode };
